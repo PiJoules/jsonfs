@@ -42,3 +42,8 @@ cdef class Directory(dict):
         """Commit changes to filesystem."""
         pass
 
+cpdef void test():
+    print("another test")
+
+print("test")
+
