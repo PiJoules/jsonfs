@@ -1,0 +1,5 @@
+*venv/
+*.c
+*.pyc
+*.so
+build/
