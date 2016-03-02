@@ -6,6 +6,7 @@ from __future__ import print_function
 
 import os
 import errno
+import re
 
 
 cdef class Directory(dict):
@@ -37,7 +38,7 @@ cdef class Directory(dict):
     cdef void __parse_dir(self, char* dirname, dict tree_dict,
                           filehandler=None):
         """Convert the file system to a dict."""
-        for filename in os.litdir(dirname):
+        for filename in os.listdir(dirname):
             fullpath = os.path.join(dirname, filename)
             if os.path.isdir(fullpath):
                 # Recursively call function if directory.
@@ -58,7 +59,8 @@ cdef class Directory(dict):
     cdef void __create_filetree(self, char* root, dict tree_dict,
                                 filehandler=None):
         """Create the file system from a dict."""
-        for filename, val in tree_dict:
+        for key, val in tree_dict:
+            filename = re.sub(r"\s+", "-", str(key))
             fullpath = os.path.join(root, filename)
             if isinstance(val, dict):
                 # Make the directory, then traverse the dict.
@@ -66,7 +68,7 @@ cdef class Directory(dict):
                 self.__create_filetree(fullpath, val)
             else:
                 # Make the file.
-                open(fullpath, "x").close()
+                open(fullpath, "a").close()
 
                 # Do something with the file.
                 if hasattr(filehandler, "__call__"):
