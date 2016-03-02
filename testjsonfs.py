@@ -12,9 +12,8 @@ from __future__ import print_function
 
 import unittest
 import os
-import contextlib
 import shutil
-import tempfile
+import mock
 
 from jsonfs import Directory
 from random import choice
@@ -24,16 +23,6 @@ from string import ascii_uppercase, digits
 def rand_str(n=10):
     """Generate a random string."""
     return "".join(choice(ascii_uppercase + digits) for i in xrange(n))
-
-
-@contextlib.contextmanager
-def tempdir():
-    """Create a temprary directory that will be removed on close."""
-    dirpath = tempfile.mkdtemp()
-    try:
-        yield dirpath
-    finally:
-        shutil.rmtree(dirpath)
 
 
 class TestJSONFS(unittest.TestCase):
@@ -78,6 +67,23 @@ class TestJSONFS(unittest.TestCase):
         directory["somefile.txt"] = None
         directory.commit()
         self.assertTrue(os.path.isfile(os.path.join(dirname, "somefile.txt")))
+
+        # Test filehandler
+        handler_mock = mock.MagicMock()
+        directory.commit(filehandler=handler_mock)
+        handler_mock.assert_called_with(os.path.join(dirname, "somefile.txt"))
+
+    def test_dir_create(self):
+        """Test directory creation."""
+        dirname = self.__dirname
+        directory = self.__directory
+
+        directory["somedir"] = {"somefile.txt": "someval"}
+        directory.commit()
+        self.assertTrue(os.path.isdir(os.path.join(dirname, "somedir")))
+        self.assertTrue(os.path.isfile(os.path.join(dirname,
+                                                    "somedir",
+                                                    "somefile.txt")))
 
 
 if __name__ == "__main__":

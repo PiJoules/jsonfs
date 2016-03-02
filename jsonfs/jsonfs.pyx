@@ -65,7 +65,7 @@ cdef class Directory(dict):
             if isinstance(val, dict):
                 # Make the directory, then traverse the dict.
                 self.mkdir(fullpath)
-                self.__create_filetree(fullpath, val)
+                self.__create_filetree(fullpath, val, filehandler=filehandler)
             else:
                 # Make the file.
                 open(fullpath, "a").close()
@@ -76,9 +76,9 @@ cdef class Directory(dict):
 
     cpdef void reload(self, filehandler=None):
         """Reload the filesystem."""
-        self.__parse_dir(self.__root, self)
+        self.__parse_dir(self.__root, self, filehandler=filehandler)
 
     cpdef void commit(self, filehandler=None):
         """Commit changes to filesystem."""
-        self.__create_filetree(self.__root, self)
+        self.__create_filetree(self.__root, self, filehandler=filehandler)
 
