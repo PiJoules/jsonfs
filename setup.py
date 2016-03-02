@@ -30,6 +30,7 @@ setup(
     author='Leonard Chan',
     author_email='lchan1994@yahoo.com',
     url='https://github.com/PiJoules/jsonfs',  # use the URL to the github repo
+    download_url="https://github.com/PiJoules/jsonfs/releases/tag/v0.0.1",
     keywords=['testing', 'logging', 'example'],  # arbitrary keywords
     classifiers=[
         "Development Status :: 3 - Alpha",

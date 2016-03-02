@@ -32,6 +32,7 @@ directory.commit(filehandler=callback)  # prints "somefile.txt" and "anotherfile
 
 ## TODO
 - Add a way for deleting files.
+- Kill the bug you saw before going to sleep.
 
 
 ## Suggestions/Bug/I messed something up horribly
