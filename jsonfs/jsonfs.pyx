@@ -59,7 +59,7 @@ cdef class Directory(dict):
     cdef void __create_filetree(self, char* root, dict tree_dict,
                                 filehandler=None):
         """Create the file system from a dict."""
-        for key, val in tree_dict:
+        for key, val in tree_dict.iteritems():
             filename = re.sub(r"\s+", "-", str(key))
             fullpath = os.path.join(root, filename)
             if isinstance(val, dict):
@@ -72,9 +72,7 @@ cdef class Directory(dict):
 
                 # Do something with the file.
                 if hasattr(filehandler, "__call__"):
-                    tree_dict[filename] = filehandler(fullpath)
-                else:
-                    tree_dict[filename] = fullpath
+                    filehandler(fullpath)
 
     cpdef void reload(self, filehandler=None):
         """Reload the filesystem."""

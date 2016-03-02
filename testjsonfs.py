@@ -39,14 +39,27 @@ def tempdir():
 class TestJSONFS(unittest.TestCase):
     """Bagels."""
 
-    def test_create(self):
-        """Test creating the Directory."""
+    def __create_dirname(self):
+        """Create a random string for a directory name."""
         dirname = rand_str()
         while os.path.isdir(dirname):
             dirname = rand_str()
+        return dirname
+
+    def setUp(self):
+        """Create the Directory on setup."""
+        self.__dirname = self.__create_dirname()
+        self.__directory = Directory(self.__dirname)
+
+    def tearDown(self):
+        """Destroy the Directory on deletion."""
+        shutil.rmtree(self.__dirname)
+
+    def test_create(self):
+        """Test creating the Directory."""
+        dirname = self.__dirname
 
         # Test creation
-        Directory(dirname)
         self.assertTrue(os.path.isdir(dirname))
 
         # No error should be thrown on creating
@@ -56,8 +69,15 @@ class TestJSONFS(unittest.TestCase):
             self.fail(
                 "Exception raised when recreating the Directory: {}"
                 .format(e))
-        finally:
-            shutil.rmtree(dirname)
+
+    def test_file_create(self):
+        """Test file creation."""
+        dirname = self.__dirname
+        directory = self.__directory
+
+        directory["somefile.txt"] = None
+        directory.commit()
+        self.assertTrue(os.path.isfile(os.path.join(dirname, "somefile.txt")))
 
 
 if __name__ == "__main__":
