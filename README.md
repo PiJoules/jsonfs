@@ -30,6 +30,12 @@ directory.commit(filehandler=callback)  # prints "somefile.txt" and "anotherfile
 ```
 
 
+## Test
+```sh
+$ python testjsonfs.py
+```
+
+
 ## TODO
 - Add a way for deleting files.
 - Kill the bug you saw before going to sleep.
