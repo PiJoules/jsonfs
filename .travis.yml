@@ -2,9 +2,11 @@ language: python
 python:
   - "2.7"
 # command to install dependencies
-install:
+before_install:
   - pip install -r requirements.txt
   - pip install jsonfs
+install:
+  - python setup.py build_ext --inplace
 # command to run tests
 script:
   - python -m unittest discover
