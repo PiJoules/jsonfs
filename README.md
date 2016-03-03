@@ -1,4 +1,6 @@
 # jsonfs
+[![Build Status](https://travis-ci.org/PiJoules/jsonfs.svg?branch=master)](https://travis-ci.org/PiJoules/jsonfs)
+
 Convert a filesystem to a dictionary you can edit in python.
 
 Currently, this is just meant to be a quick and easy way to create nested
