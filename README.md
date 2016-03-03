@@ -13,7 +13,8 @@ from jsonfs import Directory
 # This oject can be treated as a dictionary.
 directory = Directory("somedir")
 
-# Create a file
+# Create a file (values don't really matter)
+
 directory["somefile.txt"] = None
 
 # Create a directory
@@ -27,6 +28,15 @@ directory.commit()  # Now the files and dir are created under "somedir/"
 def callback(fullpath):
     print fullpath
 directory.commit(filehandler=callback)  # prints "somefile.txt" and "anotherfile.csv"
+
+
+## Other stuff
+# All keys are converted to strings when committing.
+directory[(1, 2)] = None  # somedir/(1,\ 2)
+
+# If a filename that is specified like a directory is used as a key,
+# the file will not be created.
+directory["potentialdir/"] = None  # No new file created
 ```
 
 
@@ -38,7 +48,7 @@ $ python testjsonfs.py
 
 ## TODO
 - Add a way for deleting files.
-- Kill the bug you saw before going to sleep.
+- Figure out a way the value for each dictionary can be used.
 
 
 ## Suggestions/Bug/I messed something up horribly

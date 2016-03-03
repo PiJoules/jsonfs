@@ -26,12 +26,11 @@ setup(
     name='jsonfs',
     packages=['jsonfs'],  # this must be the same as the name above
     version='0.0.2',
-    description='Tetsing pypi',
+    description="Edit a filesystem as a dictionary in python.",
     author='Leonard Chan',
     author_email='lchan1994@yahoo.com',
     url='https://github.com/PiJoules/jsonfs',  # use the URL to the github repo
-    download_url="https://github.com/PiJoules/jsonfs/releases/tag/v0.0.1",
-    keywords=['testing', 'logging', 'example'],  # arbitrary keywords
+    keywords=["json", "filesystem", "jsonfs", "dict"],
     classifiers=[
         "Development Status :: 3 - Alpha",
         'Intended Audience :: Developers',
