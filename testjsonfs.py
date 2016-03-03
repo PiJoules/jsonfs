@@ -18,6 +18,7 @@ import mock
 from jsonfs import Directory
 from random import choice
 from string import ascii_uppercase, digits
+from random import random
 
 
 def rand_str(n=10):
@@ -42,10 +43,28 @@ class TestJSONFS(unittest.TestCase):
             dirname = rand_str()
         return dirname
 
+    def assert_is_file(self, *args):
+        """Check if a file exists."""
+        filename = os.path.join(*args)
+        self.assertTrue(os.path.isfile(filename))
+
+    def assert_is_dir(self, *args):
+        """Check if a file exists."""
+        dirname = os.path.join(*args)
+        self.assertTrue(os.path.isdir(dirname))
+
     def setUp(self):
         """Create the Directory on setup."""
         self.__dirname = self.__create_dirname()
-        self.__directory = Directory(self.__dirname)
+
+        # There was a bug that did not set the dirname as the root if
+        # the dirname had a tailing slash. Add one for every other test
+        # to make sure this works regardless of the tail.
+        dirname = self.__dirname
+        if random() < 0.5:
+            dirname += os.sep
+
+        self.__directory = Directory(dirname)
 
     def tearDown(self):
         """Destroy the Directory on deletion."""
@@ -117,7 +136,7 @@ class TestJSONFS(unittest.TestCase):
         directory[(1, 2)] = {"somedir": {"somefile": None}}
         directory.commit()
         filepath = os.path.join(dirname,
-                                "(1,-2)",
+                                "(1, 2)",
                                 "somedir",
                                 "somefile")
         self.assertTrue(os.path.isfile(filepath))
@@ -126,10 +145,22 @@ class TestJSONFS(unittest.TestCase):
         directory[Custom()] = {"somedir": {"somefile": None}}
         directory.commit()
         filepath = os.path.join(dirname,
-                                "How's-my-driving?",
+                                "How's my driving?",
                                 "somedir",
                                 "somefile")
         self.assertTrue(os.path.isfile(filepath))
+
+    def test_misc(self):
+        """Miscellanious tests that I don't know how to categorize."""
+        directory = self.__directory
+        dirname = self.__dirname
+
+        directory["abc/"] = {"abc": 123}
+        directory["123/"] = "abc/"
+        directory.commit()
+
+        self.assert_is_file(dirname, "abc", "abc")
+        self.assert_is_file(dirname, "123")
 
 
 if __name__ == "__main__":

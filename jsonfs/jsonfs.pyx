@@ -8,6 +8,9 @@ import os
 import errno
 import re
 
+from libc.stdlib cimport malloc, free
+from libc.string cimport strncpy
+
 
 cdef class Directory(dict):
     """Class representing a file hierarchy as a dictionary."""
@@ -24,7 +27,13 @@ cdef class Directory(dict):
         self.__parse_dir(dirname, self)
 
         # Set properties
-        self.__root = dirname
+        self.__root = <char*>malloc(len(dirname) * sizeof(char))
+        if not self.__root:
+            raise MemoryError()
+        strncpy(self.__root, dirname, len(dirname))
+
+    def __dealloc__(self):
+        free(self.__root)
 
     cdef void mkdir(self, char* dirname):
         """Create a directory if not exist."""
@@ -60,7 +69,7 @@ cdef class Directory(dict):
                                 filehandler=None):
         """Create the file system from a dict."""
         for key, val in tree_dict.iteritems():
-            filename = re.sub(r"\s+", "-", str(key))
+            filename = str(key)
             fullpath = os.path.join(root, filename)
             if isinstance(val, dict):
                 # Make the directory, then traverse the dict.
