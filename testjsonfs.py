@@ -48,6 +48,11 @@ class TestJSONFS(unittest.TestCase):
         filename = os.path.join(*args)
         self.assertTrue(os.path.isfile(filename))
 
+    def assert_is_not_file(self, *args):
+        """Check if a file does not exists."""
+        filename = os.path.join(*args)
+        self.assertFalse(os.path.isfile(filename))
+
     def assert_is_dir(self, *args):
         """Check if a file exists."""
         dirname = os.path.join(*args)
@@ -150,17 +155,17 @@ class TestJSONFS(unittest.TestCase):
                                 "somefile")
         self.assertTrue(os.path.isfile(filepath))
 
-    def test_misc(self):
-        """Miscellanious tests that I don't know how to categorize."""
+    def test_separators(self):
+        """Test dirs with os separators."""
         directory = self.__directory
         dirname = self.__dirname
 
-        directory["abc/"] = {"abc": 123}
-        directory["123/"] = "abc/"
+        directory["abc" + os.sep] = {"abc": 123}
+        directory["123" + os.sep] = "abc" + os.sep
         directory.commit()
 
         self.assert_is_file(dirname, "abc", "abc")
-        self.assert_is_file(dirname, "123")
+        self.assert_is_not_file(dirname, "123")
 
 
 if __name__ == "__main__":

@@ -41,8 +41,8 @@ cdef class Directory(dict):
             os.makedirs(dirname)
         except OSError as e:
             if e.errno != errno.EEXIST:
-                raise RuntimeError(
-                    "Could not create directory '{}': {}".format(dirname, e))
+                # Allow for this to pass.
+                pass
 
     cdef void __parse_dir(self, char* dirname, dict tree_dict,
                           filehandler=None):
@@ -65,6 +65,10 @@ cdef class Directory(dict):
                 else:
                     tree_dict[filename] = fullpath
 
+    cdef bint __spelled_like_dir(self, char* filename):
+        """Check if a file is spelle like a dir (ends with os.sep)."""
+        return filename.endswith(os.sep)
+
     cdef void __create_filetree(self, char* root, dict tree_dict,
                                 filehandler=None):
         """Create the file system from a dict."""
@@ -77,6 +81,10 @@ cdef class Directory(dict):
                 self.__create_filetree(fullpath, val, filehandler=filehandler)
             else:
                 # Make the file.
+                # Do not attempt to make files that are dirs
+                if self.__spelled_like_dir(fullpath):
+                    continue
+
                 open(fullpath, "a").close()
 
                 # Do something with the file.
