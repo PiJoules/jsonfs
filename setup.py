@@ -25,7 +25,7 @@ else:
 setup(
     name='jsonfs',
     packages=['jsonfs'],  # this must be the same as the name above
-    version='0.0.1',
+    version='0.0.2',
     description='Tetsing pypi',
     author='Leonard Chan',
     author_email='lchan1994@yahoo.com',
