@@ -4,7 +4,7 @@ python:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
-  - jsonfs
+  - pip install jsonfs
 # command to run tests
 script:
   - python -m unittest discover
